@@ -1,5 +1,5 @@
-"""Component 5 - converter trial 3v1
-based on 02_Converter_GUI_v1
+"""Component 6 - converter v2
+copy of 05_converter_trial_2v2, with updates
 building on to_convert function, incorporating pre-made functions and code
 Wen-Qi Toh
 26/3/21"""
@@ -86,17 +86,48 @@ class Converter:
 
         try:
             to_convert = float(to_convert)
+            has_errors = "no"
 
-        # check amount is valid
-        # convert to F
-        # convert to C
-        # round
-        # display answer
-        # add answer to history list
+            # check amount is valid, convert to F
+            if low == -273 and to_convert >= low:
+                fahrenheit = (to_convert * 9/5) + 32
+                to_convert = self.round_it(to_convert)
+                fahrenheit = self.round_it(fahrenheit)
+                answer = f"{to_convert} degrees C is {fahrenheit} degrees F"
+
+            # check amount is valid, convert to C
+            elif low == -459 and to_convert >= low:
+                celsius = (to_convert - 32) * 5/9
+                to_convert = self.round_it(to_convert)
+                celsius = self.round_it(celsius)
+                answer = f"{to_convert} degrees F is {celsius} degrees C"
+
+            else:
+                # if input is invalid (eg too cold)
+                answer = "too cold!"
+                has_errors = "yes"
+
+            # display answer
+            if has_errors == "no":
+                self.converted_label.configure(text=answer, fg="blue")
+                self.temp_entry.configure(bg="white")
+            else:
+                self.converted_label.configure(text=answer, fg="red")
+                self.temp_entry.configure(bg=error)
+
+            # add answer to history list
 
         except ValueError:
             self.converted_label.configure(text="Enter a number!!", fg="red")
             self.temp_entry.configure(bg=error)
+            # round!!
+
+    def round_it(self, to_round):
+        if to_round % 1 == 0:
+            rounded = int(to_round)
+        else:
+            rounded = round(to_round, 1)
+        return rounded
 
 
 # main routine
